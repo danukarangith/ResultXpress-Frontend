@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import Sidebar from './Sidebar.tsx';
-import Header from './Header.tsx';
-import { FaCheckCircle, FaUsers,  FaClipboardList } from 'react-icons/fa';
+import { FaCheckCircle, FaUsers, FaClipboardList } from 'react-icons/fa';
 import "../../styles/NewResult.css";
-
-
-
-
-
+import Header from "./NewResultHeader.tsx";
+import axios from 'axios'; // Import Axios
 
 // Stat Card Component
 interface StatCardProps {
@@ -55,15 +51,11 @@ const ResultCheckPage: React.FC = () => {
         setError('');
 
         try {
-            // Fetch student results based on student number
-            const response = await fetch(`/api/results/${studentNumber}`);
-            if (!response.ok) {
-                throw new Error('Student not found.');
-            }
-            const data = await response.json();
-            setResults(data);
+            // Using Axios to fetch student results based on student number
+            const response = await axios.get(`/api/results/${studentNumber}`);
+            setResults(response.data); // Assuming response.data contains the results
         } catch (err: any) {
-            setError(err.message || 'Something went wrong');
+            setError(err.response?.data?.message || 'Something went wrong');
         } finally {
             setLoading(false);
         }
