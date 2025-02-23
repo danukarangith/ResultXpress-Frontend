@@ -7,6 +7,7 @@ import { DailySalesChart } from './charts/DailySalesChart.tsx';
 import { CompletedTasksChart } from './charts/CompletedTasksChart.tsx';
 import Projects from './Projects.tsx';
 import OrdersOverview from './OrdersOverview.tsx';
+import '../../styles/Dashboard.css';
 
 // Stat Card Component
 interface StatCardProps {
@@ -33,8 +34,8 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, change, period,
     );
 };
 
-// Main Dashboard Component
-const Dashboard = () => {
+// Main AdminDashboard Component
+const AdminDashboard = () => {
     return (
         <div className="dashboard-container">
             <Sidebar />
@@ -43,7 +44,7 @@ const Dashboard = () => {
 
                 <div className="stats-row">
                     <StatCard
-                        title="Today's Money"
+                        title="Today's admin"
                         value="$53k"
                         icon={<FaMoneyBill />}
                         change="+55%"
@@ -91,4 +92,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default AdminDashboard;

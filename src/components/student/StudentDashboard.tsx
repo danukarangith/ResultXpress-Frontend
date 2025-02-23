@@ -33,8 +33,8 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, change, period,
     );
 };
 
-// Main Dashboard Component
-const Dashboard = () => {
+// Main AdminDashboard Component
+const StudentDashboard = () => {
     return (
         <div className="dashboard-container">
             <Sidebar />
@@ -91,4 +91,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default StudentDashboard;
