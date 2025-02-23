@@ -18,7 +18,7 @@ const Sidebar = () => {
             </div>
             <div className="menu-items">
                 <NavLink
-                    to="/dashboard"
+                    to="/student-dashboard"
                     className={`menu-item ${activeMenu === 'dashboard' ? 'active' : ''}`}
                     onClick={() => handleMenuClick('dashboard')}
                 >
