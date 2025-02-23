@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import Sidebar from './Sidebar.tsx';
 import { FaCheckCircle, FaUsers, FaClipboardList } from 'react-icons/fa';
-import "../../styles/NewResult.css";
 import Header from "./NewResultHeader.tsx";
-import axios from 'axios'; // Import Axios
+import axios from 'axios';
 
-// Stat Card Component
 interface StatCardProps {
     title: string;
     value: string | number;
@@ -30,10 +28,9 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, change, period,
     );
 };
 
-// Main ResultCheck Page Component
 const ResultCheckPage: React.FC = () => {
     const [studentNumber, setStudentNumber] = useState<string>('');
-    const [results, setResults] = useState<any[]>([]);
+    const [result, setResult] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
 
@@ -42,6 +39,7 @@ const ResultCheckPage: React.FC = () => {
     };
 
     const fetchResults = async () => {
+        console.log('Fetching results for student:', studentNumber); // Debugging line
         if (!studentNumber) {
             setError('Please enter a student number.');
             return;
@@ -51,15 +49,18 @@ const ResultCheckPage: React.FC = () => {
         setError('');
 
         try {
-            // Using Axios to fetch student results based on student number
-            const response = await axios.get(`/api/results/${studentNumber}`);
-            setResults(response.data); // Assuming response.data contains the results
+            const response = await axios.get(`http://localhost:3000/api/results/${studentNumber}/latest`);
+
+            console.log('API Response:', response.data); // Debugging line
+            setResult(response.data.result);
         } catch (err: any) {
+            console.log('Error:', err); // Debugging line
             setError(err.response?.data?.message || 'Something went wrong');
         } finally {
             setLoading(false);
         }
     };
+
 
     return (
         <div className="dashboard-container flex">
@@ -70,7 +71,7 @@ const ResultCheckPage: React.FC = () => {
                 <div className="stats-row flex space-x-6 mb-8">
                     <StatCard
                         title="Total Results Checked"
-                        value={results.length}
+                        value={result ? 1 : 0} // Show 1 if there's a result
                         icon={<FaClipboardList />}
                         change="+5%"
                         period="last week"
@@ -113,7 +114,7 @@ const ResultCheckPage: React.FC = () => {
                     {error && <p className="mt-4 text-center text-red-500">{error}</p>}
                 </div>
 
-                {results.length > 0 && (
+                {result && (
                     <div className="results-section bg-white shadow-md rounded-lg p-6">
                         <h3 className="text-xl font-semibold mb-4">Student Results</h3>
                         <table className="min-w-full table-auto">
@@ -121,26 +122,21 @@ const ResultCheckPage: React.FC = () => {
                             <tr>
                                 <th className="border px-4 py-2">Subject</th>
                                 <th className="border px-4 py-2">Score</th>
+                                <th className="border px-4 py-2">Grade</th>
+
                             </tr>
                             </thead>
                             <tbody>
-                            {results.map((result, index) => (
-                                <tr key={index}>
-                                    <td className="border px-4 py-2">{result.subject}</td>
-                                    <td className="border px-4 py-2">{result.score}</td>
-                                </tr>
-                            ))}
+                            <tr>
+                                <td className="border px-4 py-2">{result.subject}</td>
+                                <td className="border px-4 py-2">{result.marks}</td>
+                                <td className="border px-4 py-2">{result.grade}</td>
+
+                            </tr>
                             </tbody>
                         </table>
                     </div>
                 )}
-
-                {/*/!* Charts Row (can be customized) *!/*/}
-                {/*<div className="charts-row grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">*/}
-                {/*    <WebsiteViewChart />*/}
-                {/*    <DailySalesChart />*/}
-                {/*    <CompletedTasksChart />*/}
-                {/*</div>*/}
             </div>
         </div>
     );
