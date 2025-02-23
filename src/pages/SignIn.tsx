@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { User, Lock } from 'lucide-react';
+import Swal from 'sweetalert2';
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const [error] = useState('');
     const navigate = useNavigate();
 
     const handleLogin = async (e: React.FormEvent) => {
@@ -20,13 +21,31 @@ const LoginPage: React.FC = () => {
             const decodedToken = JSON.parse(atob(token.split('.')[1]));
 
             if (decodedToken.role === 'ADMIN') {
-                console.log(decodedToken)
-                navigate('/admin-dashboard');
+                Swal.fire({
+                    title: 'Welcome, Admin!',
+                    text: 'You have successfully logged in.',
+                    icon: 'success',
+                    confirmButtonText: 'Go to Dashboard',
+                }).then(() => {
+                    navigate('/admin-dashboard');
+                });
             } else {
-                navigate('/student-dashboard');
+                Swal.fire({
+                    title: 'Welcome, Student!',
+                    text: 'You have successfully logged in.',
+                    icon: 'success',
+                    confirmButtonText: 'Go to Dashboard',
+                }).then(() => {
+                    navigate('/student-dashboard');
+                });
             }
         } catch (error) {
-            setError('Invalid email or password');
+            Swal.fire({
+                title: 'Login Failed',
+                text: 'Invalid email or password.',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
         }
     };
 
