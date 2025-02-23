@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import Header from "./StudentManageHeader.tsx";
 import { FaTimes, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
-import '../../styles/Dashboard.css';
+// import '../../styles/Dashboard.css';
+import axios from "axios";
+import Swal from "sweetalert2";
 
 interface Student {
     id: number;
@@ -38,9 +40,8 @@ const StudentManagement: React.FC = () => {
 
     const fetchStudents = async () => {
         try {
-            const response = await fetch('/api/students');
-            const data = await response.json();
-            setStudents(data);
+            const response = await axios.get('http://localhost:3000/api/students/getStudents');
+            setStudents(response.data);
         } catch (error) {
             console.error('Error fetching students:', error);
         }
@@ -57,23 +58,26 @@ const StudentManagement: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const url = isEditing ? `/api/students/${currentStudent?.id}` : '/api/students';
-            const method = isEditing ? 'PUT' : 'POST';
+            const url = isEditing ? `http://localhost:3000/api/students/edit/${currentStudent?.id}` : 'http://localhost:3000/api/students/add';
+            const method = isEditing ? 'put' : 'post';
 
-            const response = await fetch(url, {
+            const response = await axios({
                 method,
+                url,
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                data: formData,
             });
 
-            if (response.ok) {
+            if (response.status === 200 || response.status === 201) {
                 fetchStudents();
                 handleCloseModal();
+                Swal.fire('Success!', 'Student has been saved successfully.', 'success');
             }
         } catch (error) {
             console.error('Error saving student:', error);
+            Swal.fire('Error!', 'There was an issue saving the student.', 'error');
         }
     };
 
@@ -90,16 +94,25 @@ const StudentManagement: React.FC = () => {
     };
 
     const handleDelete = async (id: number) => {
-        if (window.confirm('Are you sure you want to delete this student?')) {
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: 'This will delete the student permanently!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+        });
+
+        if (result.isConfirmed) {
             try {
-                const response = await fetch(`/api/students/${id}`, {
-                    method: 'DELETE',
-                });
-                if (response.ok) {
+                const response = await axios.delete(`http://localhost:3000/api/students/delete/${id}`);
+                if (response.status === 200) {
                     fetchStudents();
+                    Swal.fire('Deleted!', 'Student has been deleted.', 'success');
                 }
             } catch (error) {
                 console.error('Error deleting student:', error);
+                Swal.fire('Error!', 'There was an issue deleting the student.', 'error');
             }
         }
     };
@@ -115,7 +128,6 @@ const StudentManagement: React.FC = () => {
             password: ''
         });
     };
-
     return (
         <div className="dashboard-container flex">
             <Sidebar />
