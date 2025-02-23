@@ -4,11 +4,15 @@ import Header from './AdminManageHeader.tsx';
 import { FaTimes, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 import '../../styles/Dashboard.css';
 
+import axios from 'axios';
+import Swal from 'sweetalert2';
+
 interface Admin {
     id: number;
     username: string;
     email: string;
-    students: string[]; // Assuming students is a list of student names/IDs
+    password: string;
+    students: string[];
 }
 
 interface AdminFormData {
@@ -28,20 +32,31 @@ const AdminManagement: React.FC = () => {
         password: '',
     });
 
-    // Fetch admins
     useEffect(() => {
         fetchAdmins();
     }, []);
 
     const fetchAdmins = async () => {
         try {
-            const response = await fetch('/api/admins'); // Adjust API endpoint accordingly
-            const data = await response.json();
-            setAdmins(data);
+            const response = await axios.get('http://localhost:3000/api/admin/getAllAdmins');
+
+            console.log('API Response:', response.data); // ✅ Debugging line
+
+            // Correctly access the admins array inside the response object
+            if (response.data && Array.isArray(response.data.admins)) {
+                setAdmins(response.data.admins);
+            } else {
+                console.error('Unexpected API response:', response.data);
+                setAdmins([]); // Prevent map errors
+            }
         } catch (error) {
             console.error('Error fetching admins:', error);
+            Swal.fire('Error', 'Failed to fetch admins', 'error');
+            setAdmins([]); // Fallback to prevent errors
         }
     };
+
+
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -54,23 +69,24 @@ const AdminManagement: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const url = isEditing ? `/api/admins/${currentAdmin?.id}` : '/api/admins';
-            const method = isEditing ? 'PUT' : 'POST';
+            const url = isEditing ? `http://localhost:3000/api/admin/edit-admin/${currentAdmin?.id}` : 'http://localhost:3000/api/admin/add-admin';
+            const method = isEditing ? 'put' : 'post';
 
-            const response = await fetch(url, {
+            const response = await axios({
                 method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
+                url,
+                headers: { 'Content-Type': 'application/json' },
+                data: formData,
             });
 
-            if (response.ok) {
+            if (response.status === 200 || response.status === 201) {
                 fetchAdmins();
                 handleCloseModal();
+                Swal.fire('Success', 'Admin saved successfully', 'success');
             }
         } catch (error) {
             console.error('Error saving admin:', error);
+            Swal.fire('Error', 'Failed to save admin', 'error');
         }
     };
 
@@ -79,23 +95,32 @@ const AdminManagement: React.FC = () => {
         setFormData({
             username: admin.username,
             email: admin.email,
-            password: '', // Password should be left empty when editing
+            password: admin.password, // Don't prefill password
         });
         setIsEditing(true);
         setIsModalOpen(true);
     };
 
     const handleDelete = async (id: number) => {
-        if (window.confirm('Are you sure you want to delete this admin?')) {
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: 'This will delete the admin permanently!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+        });
+
+        if (result.isConfirmed) {
             try {
-                const response = await fetch(`/api/admins/${id}`, {
-                    method: 'DELETE',
-                });
-                if (response.ok) {
+                const response = await axios.delete(`http://localhost:3000/api/admin/delete-admin/${id}`);
+                if (response.status === 200) {
                     fetchAdmins();
+                    Swal.fire('Deleted!', 'Admin has been deleted.', 'success');
                 }
             } catch (error) {
                 console.error('Error deleting admin:', error);
+                Swal.fire('Error', 'Failed to delete admin', 'error');
             }
         }
     };
@@ -110,6 +135,7 @@ const AdminManagement: React.FC = () => {
             password: '',
         });
     };
+
 
     return (
         <div className="dashboard-container flex">
@@ -140,28 +166,31 @@ const AdminManagement: React.FC = () => {
                             </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200">
-                            {admins.map((admin) => (
-                                <tr key={admin.id}>
-                                    <td className="px-6 py-4 text-sm text-gray-800">{admin.username}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-800">{admin.email}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-800">{admin.students.join(', ')}</td>
-                                    <td className="px-6 py-4 text-sm">
-                                        <button
-                                            onClick={() => handleEdit(admin)}
-                                            className="text-blue-600 hover:text-blue-800 mr-3"
-                                        >
-                                            <FaEdit />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(admin.id)}
-                                            className="text-red-600 hover:text-red-800"
-                                        >
-                                            <FaTrash />
-                                        </button>
-                                    </td>
+                            {Array.isArray(admins) && admins.length > 0 ? (
+                                admins.map((admin) => (
+                                    <tr key={admin.id}>
+                                        <td className="px-6 py-4 text-sm text-gray-800">{admin.id}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-800">{admin.username}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-800">{admin.email}</td>
+                                        <td className="px-6 py-4 text-sm">
+                                            <button onClick={() => handleEdit(admin)}
+                                                    className="text-blue-600 hover:text-blue-800 mr-3">
+                                                <FaEdit/>
+                                            </button>
+                                            <button onClick={() => handleDelete(admin.id)}
+                                                    className="text-red-600 hover:text-red-800">
+                                                <FaTrash/>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={4} className="text-center py-4 text-gray-600">No admins found.</td>
                                 </tr>
-                            ))}
+                            )}
                             </tbody>
+
                         </table>
                     </div>
                 </div>
@@ -178,7 +207,7 @@ const AdminManagement: React.FC = () => {
                                     onClick={handleCloseModal}
                                     className="text-gray-500 hover:text-gray-700"
                                 >
-                                    <FaTimes />
+                                    <FaTimes/>
                                 </button>
                             </div>
 
@@ -208,7 +237,9 @@ const AdminManagement: React.FC = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Password
+                                    </label>
                                     <input
                                         type="password"
                                         name="password"
