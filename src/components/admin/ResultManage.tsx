@@ -3,6 +3,8 @@ import Sidebar from './Sidebar';
 import Header from "./ResultManageHeader.tsx";
 import { FaTimes, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 import '../../styles/Dashboard.css';
+import axios from "axios";
+import Swal from "sweetalert2";
 
 interface Result {
     id: number;
@@ -33,6 +35,19 @@ const ResultManagement: React.FC = () => {
         semester: '',
         date: new Date().toISOString().split('T')[0]
     });
+   // Function to close modal and reset form state
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setIsEditing(false);
+        setCurrentResult(null);
+        setFormData({
+            studentId: '',
+            subject: '',
+            marks: 0,
+            semester: '',
+            date: new Date().toISOString().split('T')[0]
+        });
+    };
 
     // Fetch results
     useEffect(() => {
@@ -41,14 +56,17 @@ const ResultManagement: React.FC = () => {
 
     const fetchResults = async () => {
         try {
-            const response = await fetch('/api/results');
-            const data = await response.json();
-            setResults(data);
+            const response = await axios.get('http://localhost:3000/api/admin/getResults');
+            console.log('API Response:', response.data); // Debugging
+
+            // Access 'results' array from the response
+            setResults(Array.isArray(response.data.results) ? response.data.results : []);
         } catch (error) {
             console.error('Error fetching results:', error);
         }
     };
 
+    // Handle input changes
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -57,29 +75,55 @@ const ResultManagement: React.FC = () => {
         }));
     };
 
+    // Submit form data (add/edit result)
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        try {
-            const url = isEditing ? `/api/results/${currentResult?.id}` : '/api/results';
-            const method = isEditing ? 'PUT' : 'POST';
 
-            const response = await fetch(url, {
-                method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
+        // Ensure the date is in ISO format
+        const formattedDate = new Date(formData.date).toISOString();
+        const dataToSend = { ...formData, date: formattedDate }; // Add the formatted date
+
+        const url = isEditing
+            ? `http://localhost:3000/api/admin/edit-result/${currentResult?.id}`
+            : 'http://localhost:3000/api/admin/add-result';
+
+        const method = isEditing ? axios.put : axios.post;
+
+        try {
+            // Make the API request
+            await method(url, dataToSend, {
+                headers: { 'Content-Type': 'application/json' }
             });
 
-            if (response.ok) {
-                fetchResults();
-                handleCloseModal();
+            // Show success alert
+            Swal.fire({
+                title: 'Success!',
+                text: `Result ${isEditing ? 'updated' : 'added'} successfully.`,
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+
+            fetchResults();  // Refresh results
+            handleCloseModal();  // Close modal after submission
+        } catch (error: any) {
+            if (error.response) {
+                // Show error alert
+                Swal.fire({
+                    title: 'Error!',
+                    text: error.response?.data?.message || 'An error occurred while saving the result.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            } else if (error.request) {
+                console.error('Error request:', error.request);
+            } else {
+                console.error('Error message:', error.message);
             }
-        } catch (error) {
-            console.error('Error saving result:', error);
         }
     };
 
+
+    // Handle editing a result
     const handleEdit = (result: Result) => {
         setCurrentResult(result);
         setFormData({
@@ -93,32 +137,40 @@ const ResultManagement: React.FC = () => {
         setIsModalOpen(true);
     };
 
+    // Handle deleting a result
     const handleDelete = async (id: number) => {
-        if (window.confirm('Are you sure you want to delete this result?')) {
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you really want to delete this result?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, keep it'
+        });
+
+        if (result.isConfirmed) {
             try {
-                const response = await fetch(`/api/results/${id}`, {
-                    method: 'DELETE',
+                await axios.delete(`http://localhost:3000/api/admin/delete-result/${id}`);
+
+                // Show success alert
+                Swal.fire({
+                    title: 'Deleted!',
+                    text: 'The result has been deleted.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
                 });
-                if (response.ok) {
-                    fetchResults();
-                }
+
+                fetchResults();
             } catch (error) {
-                console.error('Error deleting result:', error);
+                // Show error alert
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An error occurred while deleting the result.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
             }
         }
-    };
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setIsEditing(false);
-        setCurrentResult(null);
-        setFormData({
-            studentId: '',
-            subject: '',
-            marks: 0,
-            semester: '',
-            date: new Date().toISOString().split('T')[0]
-        });
     };
 
     return (
