@@ -1,5 +1,5 @@
 import {useState, useEffect, JSX} from 'react';
-import {Lock, Mail, Key, ChevronLeft, ChevronRight, LogIn, UserPlus, EyeOff, Eye} from 'lucide-react';
+import {Lock, Mail, Key, ChevronLeft, ChevronRight, LogIn,  EyeOff, Eye} from 'lucide-react';
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
@@ -328,13 +328,13 @@ export default function EnhancedLoginPage(): JSX.Element {
                             </div>
                         </form>
 
-                        <p className="mt-6 text-center text-sm text-white/70">
-                            Don't have an account?{' '}
-                            <a href="#" className="font-medium text-indigo-300 hover:text-indigo-200 inline-flex items-center transition-colors">
-                                <UserPlus className="h-4 w-4 mr-1" />
-                                Create an account
-                            </a>
-                        </p>
+                        {/*<p className="mt-6 text-center text-sm text-white/70">*/}
+                        {/*    Don't have an account?{' '}*/}
+                        {/*    <a href="#" className="font-medium text-indigo-300 hover:text-indigo-200 inline-flex items-center transition-colors">*/}
+                        {/*        <UserPlus className="h-4 w-4 mr-1" />*/}
+                        {/*        Create an account*/}
+                        {/*    </a>*/}
+                        {/*</p>*/}
                     </div>
                 </div>
             </div>
