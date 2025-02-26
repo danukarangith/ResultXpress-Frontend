@@ -14,6 +14,8 @@ import StudentManage from "./components/admin/StudentManage.tsx";
 import AdminManage from "./components/admin/AdminManage.tsx";
 
 const App = () => {
+
+    
     return (
         <Router>
             <Routes>
@@ -41,7 +43,11 @@ const App = () => {
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </Router>
+
+
     );
+
 };
+
 
 export default App;
