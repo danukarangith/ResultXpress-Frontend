@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
-import Header from "./NewResultHeader";
+import Header from './NewResultHeader';
 import { FaUser, FaEnvelope, FaLock, FaCheckCircle } from 'react-icons/fa';
+import { jwtDecode } from "jwt-decode";
 
 // Types
 interface ProfileFormData {
@@ -12,14 +13,21 @@ interface ProfileFormData {
     confirmPassword: string;
 }
 
+interface DecodedToken {
+    id: string;
+    email: string;
+    exp: number;
+    [key: string]: any; // other fields in the token
+}
+
 interface Toast {
     message: string;
     type: 'success' | 'error';
 }
 
 const ProfileSettings: React.FC = () => {
-    const [activeTab, setActiveTab] = useState<'email' | 'password'>('email');
-    const [toast, setToast] = useState<Toast | null>(null);
+    const [studentId, setStudentId] = useState<string | null>(null);
+    const [studentInfo, setStudentInfo] = useState<{ email: string }>({ email: '' });
     const [formData, setFormData] = useState<ProfileFormData>({
         currentEmail: '',
         newEmail: '',
@@ -27,6 +35,41 @@ const ProfileSettings: React.FC = () => {
         newPassword: '',
         confirmPassword: ''
     });
+    const [toast, setToast] = useState<Toast | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+    const [activeTab, setActiveTab] = useState<'email' | 'password'>('email'); // Declare activeTab state
+
+    // Decode token and retrieve student information
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            try {
+                const decoded: DecodedToken = jwtDecode(token);
+
+                // Check if the token is expired
+                const currentTime = Math.floor(Date.now() / 1000); // Get current time in seconds
+                if (decoded.exp < currentTime) {
+                    setError("Token has expired, please log in again.");
+                    setLoading(false);
+                    return;
+                }
+
+                const studentData = {
+                    id: decoded.id,
+                    email: decoded.email,
+                };
+
+                setStudentId(decoded.id); // Set studentId from token
+                setStudentInfo(studentData);
+            } catch (err) {
+                setError("Invalid token.");
+            }
+        } else {
+            setError("No token found. Please log in.");
+        }
+        setLoading(false);
+    }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -43,26 +86,32 @@ const ProfileSettings: React.FC = () => {
 
     const handleEmailUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        const { newEmail } = formData;
+
+        if (newEmail === studentInfo.email) {
+            showToast('New email cannot be the same as the current email', 'error');
+            return;
+        }
+
+        if (!studentId) {
+            showToast('Student not authenticated', 'error');
+            return;
+        }
+
         try {
-            // Replace with your actual API endpoint
-            const response = await fetch('/api/update-email', {
-                method: 'POST',
+            const response = await fetch(`http://localhost:3000/api/students/edit/${studentId}`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    currentEmail: formData.currentEmail,
-                    newEmail: formData.newEmail,
-                }),
+                body: JSON.stringify({ email: newEmail }),
             });
 
             if (response.ok) {
                 showToast('Email updated successfully!', 'success');
-                setFormData(prev => ({
-                    ...prev,
-                    currentEmail: '',
-                    newEmail: ''
-                }));
+                setStudentInfo(prev => ({ ...prev, email: newEmail }));
+                setFormData(prev => ({ ...prev, currentEmail: '', newEmail: '' }));
             } else {
                 showToast('Failed to update email', 'error');
             }
@@ -73,22 +122,26 @@ const ProfileSettings: React.FC = () => {
 
     const handlePasswordUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (formData.newPassword !== formData.confirmPassword) {
+
+        const { newPassword, confirmPassword } = formData;
+
+        if (newPassword !== confirmPassword) {
             showToast('New passwords do not match', 'error');
             return;
         }
 
+        if (!studentId) {
+            showToast('Student not authenticated', 'error');
+            return;
+        }
+
         try {
-            // Replace with your actual API endpoint
-            const response = await fetch('/api/update-password', {
-                method: 'POST',
+            const response = await fetch(`http://localhost:3000/api/students/edit/${studentId}`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    currentPassword: formData.currentPassword,
-                    newPassword: formData.newPassword,
-                }),
+                body: JSON.stringify({ password: newPassword }),
             });
 
             if (response.ok) {
@@ -107,13 +160,20 @@ const ProfileSettings: React.FC = () => {
         }
     };
 
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>{error}</div>;
+    }
     return (
         <div className="dashboard-container flex">
             <Sidebar />
             <div className="main-content flex-1 bg-gray-100 p-6">
                 <Header />
 
-                <div className="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
+                <div className="bg-white rounded-lg shadow-lg p-6 max-w-7xl mx-auto">
                     <div className="flex items-center mb-6">
                         <FaUser className="text-3xl text-blue-600 mr-4" />
                         <h1 className="text-2xl font-bold">Profile Settings</h1>
