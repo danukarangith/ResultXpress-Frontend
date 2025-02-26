@@ -58,7 +58,7 @@ const StudentManagement: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const url = isEditing ? `http://localhost:3000/api/students/edit/${currentStudent?.id}` : 'http://localhost:3000/api/students/add';
+            const url = isEditing ? `http://localhost:3000/api/students/edit/${currentStudent?.studentId}` : 'http://localhost:3000/api/students/add';
             const method = isEditing ? 'put' : 'post';
 
             const response = await axios({
