@@ -49,13 +49,13 @@ const ProfileSettings: React.FC = () => {
             try {
                 const decoded: DecodedToken = jwtDecode(token);
 
-                // Check if the token is expired
-                const currentTime = Math.floor(Date.now() / 1000); // Get current time in seconds
-                if (decoded.exp < currentTime) {
-                    setError("Token has expired, please log in again.");
-                    setLoading(false);
-                    return;
-                }
+                // // Check if the token is expired
+                // const currentTime = Math.floor(Date.now() / 1000); // Get current time in seconds
+                // if (decoded.exp < currentTime) {
+                //     setError("Token has expired, please log in again.");
+                //     setLoading(false);
+                //     return;
+                // }
 
                 const studentData = {
                     id: decoded.id,
