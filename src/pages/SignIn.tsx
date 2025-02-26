@@ -10,6 +10,8 @@ const LoginPage: React.FC = () => {
     const [error] = useState('');
     const navigate = useNavigate();
 
+
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -144,6 +146,7 @@ const LoginPage: React.FC = () => {
                             Sign in to access your account and explore all our features.
                         </p>
                     </div>
+
                 </div>
             </div>
         </div>
