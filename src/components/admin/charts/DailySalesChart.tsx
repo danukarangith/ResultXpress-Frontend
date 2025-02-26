@@ -18,8 +18,8 @@ export const DailySalesChart = () => {
 
     return (
         <div className="chart-container">
-            <h3>Daily Sales</h3>
-            <p>15% increase in today sales</p>
+            <h3>Result check Monthly</h3>
+            <p>15% increase in this month</p>
             <div style={{ height: 250 }}>
                 <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={data}>

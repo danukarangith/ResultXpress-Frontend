@@ -19,7 +19,7 @@ export const CompletedTasksChart = () => {
     return (
         <div className="chart-container">
             <h3>Completed Tasks</h3>
-            <p>Last Campaign Performance</p>
+            <p>Last year Performance</p>
             <div style={{ height: 250 }}>
                 <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={data}>

@@ -4,7 +4,7 @@ import {
     FaHome,
     FaTable,
     FaSignInAlt,
-    FaUserPlus,
+
 
     FaClipboardList,
     FaUserGraduate, FaUserCog
@@ -22,7 +22,9 @@ const Sidebar = () => {
     return (
         <div className="sidebar">
             <div className="logo">
-                <h2>Student Manage System</h2>
+                <img src="/src/assets/WhatsApp_Image_2024-03-22_at_18.32.27_ac26c8d1-removebg-preview.png" alt="Logo" className="logo-img"style={{ width: "100px", height: "auto", marginBottom: "5px",marginRight:"10px" ,marginLeft:"40px",marginTop:"-30px"}} />
+
+                <h2 style={{marginLeft:"20px"}}>Welcome Admin 👋</h2>
             </div>
             <div className="menu-items">
                 <NavLink
@@ -74,16 +76,16 @@ const Sidebar = () => {
                         onClick={() => handleMenuClick('sign-in')}
                     >
                         <FaSignInAlt className="icon" />
-                        <span>Sign In</span>
+                        <span>Logout</span>
                     </NavLink>
-                    <NavLink
-                        to="/sign-up"
-                        className={`menu-item ${activeMenu === 'sign-up' ? 'active' : ''}`}
-                        onClick={() => handleMenuClick('sign-up')}
-                    >
-                        <FaUserPlus className="icon" />
-                        <span>Sign Up</span>
-                    </NavLink>
+                    {/*<NavLink*/}
+                    {/*    to="/sign-up"*/}
+                    {/*    className={`menu-item ${activeMenu === 'sign-up' ? 'active' : ''}`}*/}
+                    {/*    onClick={() => handleMenuClick('sign-up')}*/}
+                    {/*>*/}
+                    {/*    <FaUserPlus className="icon" />*/}
+                    {/*    <span>Sign Up</span>*/}
+                    {/*</NavLink>*/}
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from './Sidebar.tsx';
-import Header from './PreviousResultHeader.tsx';
+import Header from './DownloadReportHeader.tsx';
 import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
 import { saveAs } from 'file-saver';

@@ -5,19 +5,19 @@ import {
 
 export const WebsiteViewChart = () => {
     const data = [
-        { name: 'M', views: 45 },
-        { name: 'T', views: 20 },
-        { name: 'W', views: 10 },
-        { name: 'T', views: 20 },
-        { name: 'F', views: 40 },
-        { name: 'S', views: 10 },
-        { name: 'S', views: 35 }
+        { name: 'PRF', views: 90 },
+        { name: 'OOP', views: 76 },
+        { name: 'ORM', views: 87 },
+        { name: 'REACT', views: 20 },
+        { name: 'DBMS', views: 55 },
+        { name: 'AAD', views: 78 },
+        { name: 'SE', views: 35 }
     ];
 
     return (
         <div className="chart-container">
-            <h3>Website View</h3>
-            <p>Last Campaign Performance</p>
+            <h3>Result View</h3>
+            <p>Last Exams Performances</p>
             <div style={{ height: 250 }}>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={data}>
@@ -30,7 +30,7 @@ export const WebsiteViewChart = () => {
                 </ResponsiveContainer>
             </div>
             <div className="chart-footer">
-                <span>campaign sent 2 days ago</span>
+                <span>updated  2 days ago</span>
             </div>
         </div>
     );

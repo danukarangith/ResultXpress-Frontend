@@ -1,7 +1,7 @@
 import React from 'react';
 import Sidebar from './Sidebar.tsx';
 import Header from './Header.tsx';
-import { FaMoneyBill, FaUsers, FaUserTie, FaChartLine } from 'react-icons/fa';
+import {  FaUsers,   FaUserCheck, FaRegListAlt, FaArrowDown} from 'react-icons/fa';
 import { WebsiteViewChart } from './charts/ WebsiteViewChart.tsx';
 import { DailySalesChart } from './charts/DailySalesChart.tsx';
 import { CompletedTasksChart } from './charts/CompletedTasksChart.tsx';
@@ -40,13 +40,13 @@ const AdminDashboard = () => {
         <div className="dashboard-container">
             <Sidebar />
             <div className="main-content">
-                <Header />
+                <Header/>
 
                 <div className="stats-row">
                     <StatCard
-                        title="Today's admin"
-                        value="$53k"
-                        icon={<FaMoneyBill />}
+                        title="Today's Login"
+                        value="10"
+                        icon={<FaUserCheck/>}
                         change="+55%"
                         period="last week"
                         changeType="positive"
@@ -54,23 +54,23 @@ const AdminDashboard = () => {
                     <StatCard
                         title="Today's Users"
                         value="2,300"
-                        icon={<FaUsers />}
+                        icon={<FaUsers/>}
                         change="+3%"
                         period="last month"
                         changeType="positive"
                     />
                     <StatCard
-                        title="New Clients"
-                        value="3,462"
-                        icon={<FaUserTie />}
+                        title="New Results;"
+                        value="10+"
+                        icon={<FaRegListAlt/>}
                         change="-2%"
-                        period="yesterday"
+                        period=" yesterday"
                         changeType="negative"
                     />
                     <StatCard
-                        title="Sales"
-                        value="$103,430"
-                        icon={<FaChartLine />}
+                        title="Download Report"
+                        value="10+"
+                        icon={<FaArrowDown/>}
                         change="+5%"
                         period="yesterday"
                         changeType="positive"
@@ -78,14 +78,15 @@ const AdminDashboard = () => {
                 </div>
 
                 <div className="charts-row">
-                    <WebsiteViewChart />
-                    <DailySalesChart />
-                    <CompletedTasksChart />
+                    <WebsiteViewChart/>
+                    <DailySalesChart/>
+                    <CompletedTasksChart/>
                 </div>
 
+
                 <div className="bottom-row">
-                    <Projects />
-                    <OrdersOverview />
+                    <Projects/>
+                    <OrdersOverview/>
                 </div>
             </div>
         </div>

@@ -16,8 +16,8 @@ export const WebsiteViewChart = () => {
 
     return (
         <div className="chart-container">
-            <h3>Website View</h3>
-            <p>Last Campaign Performance</p>
+            <h3>Admins Logins</h3>
+            <p>Last Week Performance</p>
             <div style={{ height: 250 }}>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={data}>
@@ -30,7 +30,7 @@ export const WebsiteViewChart = () => {
                 </ResponsiveContainer>
             </div>
             <div className="chart-footer">
-                <span>campaign sent 2 days ago</span>
+                <span>updated 2 days ago</span>
             </div>
         </div>
     );

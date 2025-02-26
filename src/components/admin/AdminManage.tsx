@@ -156,7 +156,7 @@ const AdminManagement: React.FC = () => {
                     </div>
 
                     <div className="p-6 bg-white rounded-lg shadow-md">
-                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Admin List</h2>
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4"></h2>
                         <div className="overflow-x-auto">
                             <table className="min-w-full bg-white border border-gray-200 rounded-lg">
                                 <thead>
