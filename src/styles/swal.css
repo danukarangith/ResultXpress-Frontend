@@ -1,0 +1,119 @@
+/* Popup Styling */
+.swal2-popup-custom {
+    border-radius: 14px !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2) !important;
+    border: none !important;
+    padding: 2rem !important;
+    background: linear-gradient(135deg, #ffffff, #f9f9f9) !important;
+}
+
+/* Show Animation */
+.swal2-show-custom {
+    animation: scaleUp 0.3s ease-out;
+}
+
+/* Hide Animation */
+.swal2-hide-custom {
+    animation: scaleDown 0.2s ease-in forwards;
+}
+
+/* Scaling Animation */
+@keyframes scaleUp {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes scaleDown {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+}
+
+/* Success Icon Animation */
+.swal2-success-circular-line {
+    animation: checkmarkAnimation 0.5s ease-in-out forwards;
+    stroke: #4CAF50 !important;
+}
+
+/* Checkmark Animation */
+@keyframes checkmarkAnimation {
+    0% {
+        stroke-dashoffset: 100;
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Custom Confirm Button */
+.swal2-confirm {
+    background: #4CAF50 !important;
+    color: white !important;
+    font-weight: 600 !important;
+    padding: 10px 20px !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease-in-out !important;
+}
+
+.swal2-confirm:hover {
+    background: #388E3C !important;
+    transform: translateY(-2px);
+}
+
+/* Custom Cancel Button */
+.swal2-cancel {
+    background: #e0e0e0 !important;
+    color: #333 !important;
+    font-weight: 500 !important;
+    padding: 10px 20px !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease-in-out !important;
+}
+
+.swal2-cancel:hover {
+    background: #d6d6d6 !important;
+    transform: translateY(-2px);
+}
+
+/* Text Styling */
+.swal2-title {
+    font-size: 1.75rem !important;
+    color: #2a2a2a !important;
+    font-weight: 700 !important;
+}
+
+.swal2-content {
+    font-size: 1rem !important;
+    color: #555 !important;
+}
+
+/* Info Box */
+.swal2-info-box {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 10px;
+    border-left: 4px solid #4CAF50;
+    margin: 1rem 0;
+    text-align: center;
+}
+
+.swal2-info-box p {
+    color: #6c757d;
+    font-size: 0.95rem;
+    margin: 0;
+}
