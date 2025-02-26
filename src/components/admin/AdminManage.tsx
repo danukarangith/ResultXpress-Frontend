@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import Header from './AdminManageHeader.tsx';
-import { FaTimes, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
+import {FaTimes, FaEdit, FaTrash, FaPlus, FaUserShield} from 'react-icons/fa';
 import '../../styles/Dashboard.css';
 
 import axios from 'axios';
@@ -150,124 +150,154 @@ const AdminManagement: React.FC = () => {
                             onClick={() => setIsModalOpen(true)}
                             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200 flex items-center"
                         >
-                            <FaPlus className="mr-2" />
+                            <FaPlus className="mr-2"/>
                             Add Admin
                         </button>
                     </div>
 
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full bg-white">
-                            <thead>
-                            <tr className="bg-gray-100">
-                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600">Username</th>
-                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600">Email</th>
-                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600">Students</th>
-                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600">Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200">
-                            {Array.isArray(admins) && admins.length > 0 ? (
-                                admins.map((admin) => (
-                                    <tr key={admin.id}>
-                                        <td className="px-6 py-4 text-sm text-gray-800">{admin.id}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-800">{admin.username}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-800">{admin.email}</td>
-                                        <td className="px-6 py-4 text-sm">
-                                            <button onClick={() => handleEdit(admin)}
-                                                    className="text-blue-600 hover:text-blue-800 mr-3">
-                                                <FaEdit/>
-                                            </button>
-                                            <button onClick={() => handleDelete(admin.id)}
-                                                    className="text-red-600 hover:text-red-800">
-                                                <FaTrash/>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={4} className="text-center py-4 text-gray-600">No admins found.</td>
+                    <div className="p-6 bg-white rounded-lg shadow-md">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Admin List</h2>
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+                                <thead>
+                                <tr className="bg-gradient-to-r from-blue-600 to-blue-700">
+                                    <th className="px-6 py-4 text-left text-lg font-bold text-white">ID</th>
+                                    <th className="px-6 py-4 text-left text-lg font-bold text-white">Username</th>
+                                    <th className="px-6 py-4 text-left text-lg font-bold text-white">Email</th>
+                                    <th className="px-6 py-4 text-left text-lg font-bold text-white">Actions</th>
                                 </tr>
-                            )}
-                            </tbody>
-
-                        </table>
+                                </thead>
+                                <tbody className="divide-y divide-gray-200">
+                                {Array.isArray(admins) && admins.length > 0 ? (
+                                    admins.map((admin) => (
+                                        <tr
+                                            key={admin.id}
+                                            className="transition-colors duration-200 ease-in-out hover:bg-blue-50"
+                                        >
+                                            <td className="px-6 py-4 text-sm font-medium text-gray-800">{admin.id}</td>
+                                            <td className="px-6 py-4 text-sm text-gray-800">{admin.username}</td>
+                                            <td className="px-6 py-4 text-sm text-gray-800">{admin.email}</td>
+                                            <td className="px-6 py-4 text-sm flex space-x-2">
+                                                <button
+                                                    onClick={() => handleEdit(admin)}
+                                                    className="p-2 text-blue-600 hover:text-white hover:bg-blue-600 rounded-full transition-colors duration-200"
+                                                    title="Edit"
+                                                >
+                                                    <FaEdit/>
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(admin.id)}
+                                                    className="p-2 text-red-600 hover:text-white hover:bg-red-600 rounded-full transition-colors duration-200"
+                                                    title="Delete"
+                                                >
+                                                    <FaTrash/>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan={4} className="text-center py-4 text-gray-600">No admins found.</td>
+                                    </tr>
+                                )}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+
                 </div>
 
                 {/* Modal */}
                 {isModalOpen && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                        <div className="bg-white rounded-lg p-6 w-full max-w-md">
-                            <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-xl font-bold">
-                                    {isEditing ? 'Edit Admin' : 'Add New Admin'}
-                                </h2>
+                    <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50">
+                        <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md border-t-4 border-blue-600 transform transition-all duration-300 scale-100">
+                            <div className="flex justify-between items-center mb-6">
+                                <div className="flex items-center space-x-3">
+                                    <div className="bg-blue-100 p-2 rounded-full">
+                                        <FaUserShield className="text-blue-600 text-xl" />
+                                    </div>
+                                    <h2 className="text-2xl font-bold text-gray-800">
+                                        {isEditing ? 'Edit Admin' : 'Add New Admin'}
+                                    </h2>
+                                </div>
                                 <button
                                     onClick={handleCloseModal}
-                                    className="text-gray-500 hover:text-gray-700"
+                                    className="bg-gray-100 hover:bg-gray-200 p-2 rounded-full transition-colors duration-200"
+                                    aria-label="Close"
                                 >
-                                    <FaTimes/>
+                                    <FaTimes className="text-gray-600" />
                                 </button>
                             </div>
 
-                            <form onSubmit={handleSubmit} className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                                    <input
-                                        type="text"
-                                        name="username"
-                                        value={formData.username}
-                                        onChange={handleInputChange}
-                                        className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-                                        required
-                                    />
+                            <form onSubmit={handleSubmit} className="space-y-5">
+                                <div className="group">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            name="username"
+                                            value={formData.username}
+                                            onChange={handleInputChange}
+                                            className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-0 focus:border-blue-500 transition-all duration-200 bg-gray-50 outline-none"
+                                            required
+                                            placeholder="Enter username"
+                                        />
+                                        <div className="absolute bottom-0 left-0 w-0 group-focus-within:w-full h-1 bg-blue-600 transition-all duration-300 rounded-b-lg"></div>
+                                    </div>
                                 </div>
 
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        value={formData.email}
-                                        onChange={handleInputChange}
-                                        className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-                                        required
-                                    />
+                                <div className="group">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                    <div className="relative">
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleInputChange}
+                                            className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-0 focus:border-blue-500 transition-all duration-200 bg-gray-50 outline-none"
+                                            required
+                                            placeholder="Enter email address"
+                                        />
+                                        <div className="absolute bottom-0 left-0 w-0 group-focus-within:w-full h-1 bg-blue-600 transition-all duration-300 rounded-b-lg"></div>
+                                    </div>
                                 </div>
 
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Password
-                                    </label>
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        value={formData.password}
-                                        onChange={handleInputChange}
-                                        className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-                                        required
-                                    />
+                                <div className="group">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                                    <div className="relative">
+                                        <input
+                                            type="password"
+                                            name="password"
+                                            value={formData.password}
+                                            onChange={handleInputChange}
+                                            className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-0 focus:border-blue-500 transition-all duration-200 bg-gray-50 outline-none"
+                                            required
+                                            placeholder="Enter password"
+                                        />
+                                        <div className="absolute bottom-0 left-0 w-0 group-focus-within:w-full h-1 bg-blue-600 transition-all duration-300 rounded-b-lg"></div>
+                                    </div>
                                 </div>
 
-                                <div className="flex justify-end space-x-3 mt-6">
+                                <div className="pt-4 flex justify-end space-x-3">
                                     <button
                                         type="button"
                                         onClick={handleCloseModal}
-                                        className="px-4 py-2 text-gray-600 hover:text-gray-800 transition duration-200"
+                                        className="px-6 py-3 font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition duration-200"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
-                                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
+                                        className="px-6 py-3 font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md hover:shadow-lg transition duration-200"
                                     >
-                                        {isEditing ? 'Update' : 'Save'}
+                                        {isEditing ? 'Update Admin' : 'Create Admin'}
                                     </button>
                                 </div>
                             </form>
                         </div>
                     </div>
+
+
                 )}
             </div>
         </div>
