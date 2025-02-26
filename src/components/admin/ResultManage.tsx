@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import Header from "./ResultManageHeader.tsx";
-import { FaTimes, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
+import {FaTimes, FaEdit, FaTrash, FaPlus, FaUserShield} from 'react-icons/fa';
 import '../../styles/Dashboard.css';
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -177,7 +177,7 @@ const ResultManagement: React.FC = () => {
         <div className="dashboard-container flex">
             <Sidebar />
             <div className="main-content flex-1 bg-gray-100 p-6">
-                <Header />
+                <Header/>
 
                 <div className="bg-white rounded-lg shadow-lg p-6">
                     <div className="flex justify-between items-center mb-6">
@@ -186,152 +186,180 @@ const ResultManagement: React.FC = () => {
                             onClick={() => setIsModalOpen(true)}
                             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200 flex items-center"
                         >
-                            <FaPlus className="mr-2" />
+                            <FaPlus className="mr-2"/>
                             Add Result
                         </button>
                     </div>
 
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full bg-white">
-                            <thead>
-                            <tr className="bg-gray-100">
-                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600">Student ID</th>
-                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600">Subject</th>
-                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600">Marks</th>
-                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600">Semester</th>
-                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600">Date</th>
-                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600">Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200">
-                            {results.map((result) => (
-                                <tr key={result.id}>
-                                    <td className="px-6 py-4 text-sm text-gray-800">{result.studentId}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-800">{result.subject}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-800">{result.marks}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-800">{result.semester}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-800">
-                                        {new Date(result.date).toLocaleDateString()}
-                                    </td>
-                                    <td className="px-6 py-4 text-sm">
-                                        <button
-                                            onClick={() => handleEdit(result)}
-                                            className="text-blue-600 hover:text-blue-800 mr-3"
-                                        >
-                                            <FaEdit />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(result.id)}
-                                            className="text-red-600 hover:text-red-800"
-                                        >
-                                            <FaTrash />
-                                        </button>
-                                    </td>
+                    <div className="p-6 bg-white rounded-lg shadow-md">
+                        {/*<h2 className="text-2xl font-bold text-gray-800 mb-4">Student Results</h2>*/}
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+                                <thead>
+                                <tr className="bg-gradient-to-r from-blue-600 to-blue-700">
+                                    <th className="px-6 py-4 text-left text-lg font-bold text-white">Student ID</th>
+                                    <th className="px-6 py-4 text-left text-lg font-bold text-white">Subject</th>
+                                    <th className="px-6 py-4 text-left text-lg font-bold text-white">Marks</th>
+                                    <th className="px-6 py-4 text-left text-lg font-bold text-white">Semester</th>
+                                    <th className="px-6 py-4 text-left text-lg font-bold text-white">Date</th>
+                                    <th className="px-6 py-4 text-left text-lg font-bold text-white">Actions</th>
                                 </tr>
-                            ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody className="divide-y divide-gray-200">
+                                {results.map((result) => (
+                                    <tr
+                                        key={result.id}
+                                        className="transition-colors duration-200 ease-in-out hover:bg-blue-50"
+                                    >
+                                        <td className="px-6 py-4 text-sm font-medium text-gray-800">{result.studentId}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-800">{result.subject}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-800">
+                  <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-800 font-medium">
+                    {result.marks}
+                  </span>
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-gray-800">{result.semester}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-800">
+                                            {new Date(result.date).toLocaleDateString()}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm flex space-x-2">
+                                            <button
+                                                onClick={() => handleEdit(result)}
+                                                className="p-2 text-blue-600 hover:text-white hover:bg-blue-600 rounded-full transition-colors duration-200"
+                                                title="Edit"
+                                            >
+                                                <FaEdit/>
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(result.id)}
+                                                className="p-2 text-red-600 hover:text-white hover:bg-red-600 rounded-full transition-colors duration-200"
+                                                title="Delete"
+                                            >
+                                                <FaTrash/>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
                 {/* Modal */}
                 {isModalOpen && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                        <div className="bg-white rounded-lg p-6 w-full max-w-md">
-                            <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-xl font-bold">
-                                    {isEditing ? 'Edit Result' : 'Add New Result'}
-                                </h2>
+                    <div
+                        className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50">
+                        <div
+                            className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md border-t-4 border-blue-600 transform transition-all duration-300 scale-100">
+                            <div className="flex justify-between items-center mb-6">
+                                <div className="flex items-center space-x-3">
+                                    <div className="bg-blue-100 p-2 rounded-full">
+                                        <FaUserShield className="text-blue-600 text-xl"/>
+                                    </div>
+                                    <h2 className="text-2xl font-bold text-gray-800">
+                                        {isEditing ? 'Edit Result' : 'Add New Result'}
+                                    </h2>
+                                </div>
                                 <button
                                     onClick={handleCloseModal}
-                                    className="text-gray-500 hover:text-gray-700"
+                                    className="bg-gray-100 hover:bg-gray-200 p-2 rounded-full transition-colors duration-200"
+                                    aria-label="Close"
                                 >
-                                    <FaTimes />
+                                    <FaTimes className="text-gray-600"/>
                                 </button>
                             </div>
-
-                            <form onSubmit={handleSubmit} className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Student ID
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="studentId"
-                                        value={formData.studentId}
-                                        onChange={handleInputChange}
-                                        className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-                                        required
-                                    />
+                            <form onSubmit={handleSubmit} className="space-y-5">
+                                <div className="group">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Student ID</label>
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            name="studentId"
+                                            value={formData.studentId}
+                                            onChange={handleInputChange}
+                                            className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-0 focus:border-blue-500 transition-all duration-200 bg-gray-50 outline-none"
+                                            required
+                                            placeholder="Enter Student ID"
+                                        />
+                                        <div
+                                            className="absolute bottom-0 left-0 w-0 group-focus-within:w-full h-1 bg-blue-600 transition-all duration-300 rounded-b-lg"></div>
+                                    </div>
                                 </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Subject
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="subject"
-                                        value={formData.subject}
-                                        onChange={handleInputChange}
-                                        className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-                                        required
-                                    />
+                                <div className="group">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            name="subject"
+                                            value={formData.subject}
+                                            onChange={handleInputChange}
+                                            className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-0 focus:border-blue-500 transition-all duration-200 bg-gray-50 outline-none"
+                                            required
+                                            placeholder="Enter Subject"
+                                        />
+                                        <div
+                                            className="absolute bottom-0 left-0 w-0 group-focus-within:w-full h-1 bg-blue-600 transition-all duration-300 rounded-b-lg"></div>
+                                    </div>
                                 </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Marks
-                                    </label>
-                                    <input
-                                        type="number"
-                                        name="marks"
-                                        value={formData.marks}
-                                        onChange={handleInputChange}
-                                        className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-                                        required
-                                    />
+                                <div className="group">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Marks</label>
+                                    <div className="relative">
+                                        <input
+                                            type="number"
+                                            name="marks"
+                                            value={formData.marks}
+                                            onChange={handleInputChange}
+                                            className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-0 focus:border-blue-500 transition-all duration-200 bg-gray-50 outline-none"
+                                            required
+                                            placeholder="Enter Marks"
+                                        />
+                                        <div
+                                            className="absolute bottom-0 left-0 w-0 group-focus-within:w-full h-1 bg-blue-600 transition-all duration-300 rounded-b-lg"></div>
+                                    </div>
                                 </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Semester
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="semester"
-                                        value={formData.semester}
-                                        onChange={handleInputChange}
-                                        className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-                                        required
-                                    />
+                                <div className="group">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Semester</label>
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            name="semester"
+                                            value={formData.semester}
+                                            onChange={handleInputChange}
+                                            className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-0 focus:border-blue-500 transition-all duration-200 bg-gray-50 outline-none"
+                                            required
+                                            placeholder="Enter Semester"
+                                        />
+                                        <div
+                                            className="absolute bottom-0 left-0 w-0 group-focus-within:w-full h-1 bg-blue-600 transition-all duration-300 rounded-b-lg"></div>
+                                    </div>
                                 </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Date
-                                    </label>
-                                    <input
-                                        type="date"
-                                        name="date"
-                                        value={formData.date}
-                                        onChange={handleInputChange}
-                                        className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-                                        required
-                                    />
+                                <div className="group">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                                    <div className="relative">
+                                        <input
+                                            type="date"
+                                            name="date"
+                                            value={formData.date}
+                                            onChange={handleInputChange}
+                                            className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-0 focus:border-blue-500 transition-all duration-200 bg-gray-50 outline-none"
+                                            required
+                                        />
+                                        <div
+                                            className="absolute bottom-0 left-0 w-0 group-focus-within:w-full h-1 bg-blue-600 transition-all duration-300 rounded-b-lg"></div>
+                                    </div>
                                 </div>
-
-                                <div className="flex justify-end space-x-3 mt-6">
+                                <div className="pt-4 flex justify-end space-x-3">
                                     <button
                                         type="button"
                                         onClick={handleCloseModal}
-                                        className="px-4 py-2 text-gray-600 hover:text-gray-800 transition duration-200"
+                                        className="px-6 py-3 font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition duration-200"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
-                                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
+                                        className="px-6 py-3 font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md hover:shadow-lg transition duration-200"
                                     >
                                         {isEditing ? 'Update' : 'Save'}
                                     </button>
@@ -339,6 +367,7 @@ const ResultManagement: React.FC = () => {
                             </form>
                         </div>
                     </div>
+
                 )}
             </div>
         </div>
