@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { FileSpreadsheet } from 'lucide-react';
+import { FileSpreadsheet, XCircle } from 'lucide-react';
 import Sidebar from './Sidebar';
-import Header from "./ExcelUploadHeader";
+import Header from './ExcelUploadHeader';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { AxiosError } from 'axios';
 
 const ExcelUploadPage = () => {
     const [file, setFile] = useState<File | null>(null);
@@ -15,7 +18,6 @@ const ExcelUploadPage = () => {
     const handleDrop = (e: React.DragEvent) => {
         e.preventDefault();
         e.stopPropagation();
-
         const files = e.dataTransfer.files;
         if (files && files[0]) {
             setFile(files[0]);
@@ -28,24 +30,50 @@ const ExcelUploadPage = () => {
         }
     };
 
+    const removeFile = () => {
+        setFile(null);
+    };
+
     const handleUpload = async () => {
         if (!file) return;
         setUploading(true);
-        // Add your upload logic here
-        setUploading(false);
-    };
 
-    const StatCard = ({ title, value, icon }: { title: string, value: string, icon: React.ReactNode }) => (
-        <div className="bg-white rounded-lg p-6 shadow">
-            <div className="flex items-center gap-4">
-                <div className="text-blue-500">{icon}</div>
-                <div>
-                    <h3 className="text-gray-600">{title}</h3>
-                    <p className="text-xl font-semibold">{value}</p>
-                </div>
-            </div>
-        </div>
-    );
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await axios.post('http://localhost:3000/api/admin/upload-results', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+
+            Swal.fire({
+                title: 'Success!',
+                text: response.data.message,
+                icon: 'success',
+                confirmButtonText: 'OK',
+            });
+
+            setFile(null);
+        } catch (error: unknown) {
+            if (error instanceof AxiosError) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: error.response?.data?.message || 'An error occurred during upload.',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                });
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An unexpected error occurred.',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                });
+            }
+        } finally {
+            setUploading(false);
+        }
+    };
 
     return (
         <div className="dashboard-container flex">
@@ -53,25 +81,6 @@ const ExcelUploadPage = () => {
             <div className="flex-1 overflow-auto">
                 <div className="p-6">
                     <Header />
-
-
-                    <div className="grid grid-cols-3 gap-6 mb-6">
-                        <StatCard
-                            title="Total Uploads"
-                            value="245"
-                            icon={<span className="text-2xl">⭕</span>}
-                        />
-                        <StatCard
-                            title="Successful Imports"
-                            value="230"
-                            icon={<span className="text-2xl">✓</span>}
-                        />
-                        <StatCard
-                            title="Processing"
-                            value="15"
-                            icon={<span className="text-2xl">📄</span>}
-                        />
-                    </div>
 
                     <div className="bg-white rounded-lg shadow p-6">
                         <h2 className="text-xl font-medium text-center mb-6">Upload Results Excel Sheet</h2>
@@ -83,9 +92,17 @@ const ExcelUploadPage = () => {
                             onDragOver={handleDrag}
                             onDrop={handleDrop}
                         >
-                            <div className="flex flex-col items-center gap-4">
-                                <FileSpreadsheet className="w-12 h-12 text-gray-400" />
-                                <div>
+                            {file ? (
+                                <div className="flex items-center justify-center gap-4 bg-gray-100 p-4 rounded-lg">
+                                    <FileSpreadsheet className="w-10 h-10 text-green-500" />
+                                    <span className="text-gray-700">{file.name}</span>
+                                    <button onClick={removeFile} className="text-red-500 hover:text-red-700">
+                                        <XCircle className="w-6 h-6" />
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="flex flex-col items-center gap-4">
+                                    <FileSpreadsheet className="w-12 h-12 text-gray-400" />
                                     <p className="mb-2">
                                         Drop your Excel file here or{' '}
                                         <label className="text-blue-500 cursor-pointer hover:underline">
@@ -100,15 +117,19 @@ const ExcelUploadPage = () => {
                                     </p>
                                     <p className="text-sm text-gray-500">Supports: .xlsx, .xls</p>
                                 </div>
-                            </div>
+                            )}
                         </div>
 
                         <button
                             onClick={handleUpload}
                             disabled={!file || uploading}
-                            className="mt-6 w-full py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition-colors"
+                            className={`mt-6 w-full py-2 rounded-lg transition-colors ${
+                                file
+                                    ? 'bg-blue-500 text-white hover:bg-blue-600'
+                                    : 'bg-gray-400 text-white cursor-not-allowed'
+                            }`}
                         >
-                            Upload Results
+                            {uploading ? 'Uploading...' : 'Upload Results'}
                         </button>
                     </div>
                 </div>
