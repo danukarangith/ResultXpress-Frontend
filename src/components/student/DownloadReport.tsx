@@ -383,7 +383,7 @@ const ResultReportDownload: React.FC = () => {
 
                                             {Object.keys(semesterGroups).length === 0 ? (
                                                 <div className="p-6 text-center text-gray-500">
-                                                    No results available to download
+                                                    No results grouping yet
                                                 </div>
                                             ) : (
                                                 <div className="divide-y divide-gray-200">
