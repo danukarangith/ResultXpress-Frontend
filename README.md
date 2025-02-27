@@ -128,4 +128,7 @@ npm start
 
  -  Manages authentication state
 
+## License
+ - MIT License - see LICENSE for details
+
 
