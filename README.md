@@ -112,12 +112,12 @@ npm start
 - prisma (ORM)
 
 ## API Integration
-# All API endpoints require JWT authentication. The frontend automatically:
+ -  All API endpoints require JWT authentication. The frontend automatically:
 
-# Attaches JWT to request headers
+ -  Attaches JWT to request headers
 
-# Handles token refresh
+ -  Handles token refresh
 
-# Manages authentication state
+ -  Manages authentication state
 
 
