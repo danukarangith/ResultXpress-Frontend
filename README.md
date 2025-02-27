@@ -32,9 +32,92 @@ A web-based result checking system with separate dashboards for administrators a
 ### Installation
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/frontend-repo.git
+git clone https://github.com/danukarangith/ResultXpress-Frontend.git
 cd result-checking-system-frontend
+```
 
 2.Install dependencies:
 ```bash
 npm install
+```
+3.Create environment file:
+```bash
+cp .env.example .env
+```
+4.Configure environment variables (in .env):
+```bash
+REACT_APP_API_BASE_URL=http://localhost:5000/api
+REACT_APP_JWT_SECRET=your_jwt_secret_here
+```
+5.Start development server:
+```bash
+npm start
+```
+## Project Structure
+```bash
+/src
+├── assets            # Static assets
+├── components        # Reusable components
+├── context           # Auth context
+├── hooks             # Custom hooks
+├── layouts           # Page layouts
+├── pages
+│   ├── Admin         # Admin dashboard pages
+│   ├── Student       # Student dashboard pages
+│   ├── Auth          # Authentication pages
+│   └── Shared        # Shared pages
+├── types             # TypeScript types
+├── utils             # Utility functions
+└── App.tsx           # Main application component
+```
+
+## Available Scripts
+- npm start: Runs the app in development mode
+
+- npm build: Builds for production
+
+- npm test: Launches test runner
+
+- npm lint: Runs ESLint
+
+- npm preview: Preview production build
+
+## Technologies Used
+# Frontend:
+
+- React 18
+
+- TypeScript
+
+- Tailwind CSS
+
+- Axios (HTTP client)
+
+- react-router-dom (Routing)
+
+- react-toastify (Notifications)
+
+- xlsx (Excel parsing)
+
+# Backend:
+
+- Node.js
+
+- Express.js
+
+- JWT Authentication
+
+- MySql (Database)
+
+- prisma (ORM)
+
+## API Integration
+# All API endpoints require JWT authentication. The frontend automatically:
+
+# Attaches JWT to request headers
+
+# Handles token refresh
+
+# Manages authentication state
+
+
