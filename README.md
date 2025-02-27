@@ -6,6 +6,8 @@
 
 A web-based result checking system with separate dashboards for administrators and students. Built with React, TypeScript, and Tailwind CSS.
 
+![Image](https://github.com/user-attachments/assets/5484170e-3e28-4cd8-94a4-b627ef6fa481)
+
 ## Features
 
 ### Admin Dashboard
