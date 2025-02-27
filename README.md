@@ -82,8 +82,8 @@ npm start
 
 - npm preview: Preview production build
 
-## Technologies Used
-# Frontend:
+# Technologies Used
+## Frontend:
 
 - React 18
 
@@ -99,7 +99,13 @@ npm start
 
 - xlsx (Excel parsing)
 
-# Backend:
+  ## Libraries Used
+- React
+- Chart.js
+- Lucide React
+- Vite
+
+## Backend:
 
 - Node.js
 
