@@ -29,7 +29,7 @@ A web-based result checking system with separate dashboards for administrators a
 ### Prerequisites
 - Node.js (v18+)
 - npm (v9+)
-- Backend server running (see [backend repository](https://github.com/your-username/backend-repo))
+- Backend server running (see [backend repository]( https://github.com/danukarangith/ResultXpress-Backend))
 
 ### Installation
 1. Clone the repository:
