@@ -34,3 +34,7 @@ A web-based result checking system with separate dashboards for administrators a
 ```bash
 git clone https://github.com/your-username/frontend-repo.git
 cd result-checking-system-frontend
+
+2.Install dependencies:
+```bash
+npm install
