@@ -12,7 +12,7 @@ interface CarouselImage {
 }
 
 export default function EnhancedLoginPage(): JSX.Element {
-    // Form state
+
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -21,7 +21,7 @@ export default function EnhancedLoginPage(): JSX.Element {
     const [isLoading, ] = useState<boolean>(false);
     const navigate = useNavigate();
 
-    // Animation states
+
     const [fadeIn, setFadeIn] = useState<boolean>(false);
 
     // Carousel state
@@ -85,12 +85,12 @@ export default function EnhancedLoginPage(): JSX.Element {
     };
 
 
-    // Toggle password visibility
+
     const togglePasswordVisibility = (): void => {
         setShowPassword(!showPassword);
     };
 
-    // Carousel controls
+
     const nextSlide = (): void => {
         setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
     };
@@ -103,7 +103,7 @@ export default function EnhancedLoginPage(): JSX.Element {
         setCurrentSlide(index);
     };
 
-    // Auto-advance carousel
+
     useEffect(() => {
         const interval = setInterval(() => {
             nextSlide();
@@ -112,7 +112,7 @@ export default function EnhancedLoginPage(): JSX.Element {
         return () => clearInterval(interval);
     }, []);
 
-    // Page load animation
+
     useEffect(() => {
         setFadeIn(true);
     }, []);
